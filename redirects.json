@@ -1,0 +1,7 @@
+{
+  "/items": "/api/items",
+  "/old-url-1": "/new-url-1",
+  "/old-url-2": "/new-url-2",
+  "/old-url-3": "/new-url-1",
+  "/old-url-4": "/new-url-2"
+}
