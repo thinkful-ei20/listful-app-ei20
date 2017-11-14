@@ -65,5 +65,10 @@ app.post('/api/items', demoAuth, (req, res) => {
   res.send(`Create a specific item ${req.body.name}`);
 });
 
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 app.listen(process.env.PORT || 8080, () => console.log(
   `Your app is listening on port ${process.env.PORT || 8080}`));
