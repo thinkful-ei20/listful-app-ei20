@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: YABG4mUTSRS79NW091Vj48Lq7AtZB0U1nqKdJ42IuzJ5EUSZ+/eWdAoCZeKqfqjfIOm25puEZrtld/igt9c1mavT18N71mXlXgcF2e9ENg0TBuuZ6f5n+24qVtjEqiclMrwOC1rd11nvUwa+wcgo6Tuj8NXolb4a7AJWWa0ysVl/GIvDUP+pgA23aWafKCY+vhSGuxjs1u2C6P3vnsHOf26ajYz1S+EhytPid5oHMl/dLs3bW8UVWP1PGO4FEmI33l8iXN6p3numXNitWR6VN3JSnJZA6El7zdNyPEaQTu8ZQKeTdpBO2lptVNwq+6HeJNudlGFyVZy2W1tRjLP64e0uGgL+RexrXs7cAkCBTljMs8sa+rHSmK4EG8/YbJAuKhcCsokioh+c+A/fp2q8oWK0R6gMT72VSJeBYvQZk6qNJWsh3/9lP9zgZTEgHXGM3AJ+6VlweNNLW8+qIEKtGxLYLzRhRT40zEevMa+qtGSJChiGVgBDsO2/3Ujv4/WoZq1tEOYr9NukX/ljMG8Ts9cs2SmXjIXiOqR1+P4YBCwsARTWXNcSJnhSXJG5gEFfcJlmAaN/t7xds/s4Fi8SFlpUgaooYYJhO0mwztJHlMuSV7t5iwOGEWOqfhoNLaB0LmfLoaD07iXOUoVn+l5eJX+PeGsjP6na8jbGfn4ZUY8=
+  app: cohort-16-cicd
+  on:
+    repo: thinkful-cohort-16/demo-list-cicd
