@@ -209,3 +209,4 @@ Add a Travis CI badge to your repo
   - The code looks something like this:
 ```md
 [![Build Status](https://travis-ci.org/<USERNAME>/<REPO-NAME>.svg?branch=master)](https://travis-ci.org/<USERNAME>/<REPO-NAME>)```
+
