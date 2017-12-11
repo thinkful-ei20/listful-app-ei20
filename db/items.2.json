@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1001,
+    "name": "Ripe Avocados",
+    "description": "Avacado mash, yum"
+  },
+  {
+    "id": 1002,
+    "name": "Orange Juice",
+    "description": "not just for breakfast"
+  },
+  {
+    "id": 1003,
+    "name": "Ice Cream",
+    "description": "Ben & Jerry's"
+  },
+  {
+    "id": 1004,
+    "name": "Oil Change",
+    "description": "stop at dealership"
+  },
+  {
+    "description": "The good stuff",
+    "id": 1005,
+    "name": "Cat Food"
+  },
+  {
+    "id": 1006,
+    "name": "Sun Glasses",
+    "description": "for vacation"
+  },
+  {
+    "id": 1007,
+    "name": "Dark Roast",
+    "description": "nectar of the gods"
+  },
+  {
+    "id": 1008,
+    "name": "Running Shoes",
+    "description": "get back in shape"
+  },
+  {
+    "id": 1009,
+    "name": "Green Tea",
+    "description": "the kind with jasmine"
+  },
+  {
+    "id": 1010,
+    "name": "Pinot Nior",
+    "description": "for steak dinner"
+  }
+]

@@ -13,9 +13,9 @@
 		"chai-http": "^3.0.0",
 		"cors": "^2.8.4",
 		"express": "^4.12.4",
+		"json-server": "^0.12.1",
 		"mocha": "^3.5.3",
-		"morgan": "^1.9.0",
-		"uuid": "^3.1.0"
+		"morgan": "^1.9.0"
 	},
 	"repository": {
 		"type": "git",

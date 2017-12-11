@@ -13,6 +13,8 @@ W3D1A: Node and Express Servers
 Discussion: 
 - URL path/route can refer to a directory or file
 
+Environment Variable
+
 W3D1P: Express Routes
 ---------------------
 ### 4 and 3/4 Ways to pass data
@@ -66,17 +68,6 @@ Discussion:
 - Request is inspected, if it matches an old URL, then redirect otherwise let continue
 - Very common practice in the wild. This is an oversimplistic solution.
 
-### CORS: Add CORS middleware to allow 3rd party access
-Access the endpoints from `localhost:8080`.
-Spin up a separate server using `http-server -p 8081` and access
-Discussion:
-- Notice the Cross Origin error in Dev Tools
-- Enable CORS, note the requests and headers in the Network tab
-- CORS is a security feature implemented in browser
-- `Access-Control-Allow-XXXX` headers tell the browser if it is allowed
-
-### Use express `cors` package
-- CORS can get complex, this is a simple demo solution. IRL, use the `cors` package
 
 ### Add Error middleware
 Express has a built-in error. 
@@ -84,7 +75,7 @@ Discussion:
 - Error Handling middleware uses the `(err, req, res, next)` signature
 - Use it to override built-in handler and provide a better message to the user
 
-W3D2P Node Modules
+W3D2P Modules
 -----------------
 
 ### Modularize the middleware
@@ -106,10 +97,6 @@ W3D3A RESTful Guidelines
 
 ### Add `storage` dummy database
 Before we begin we need to add a dummy database to the app
-
-### Add `storage` dummy database
-Before we begin we need to add a dummy database to the app
-
 
 W3D3P Express Router
 --------------------

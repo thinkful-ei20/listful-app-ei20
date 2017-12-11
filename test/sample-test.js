@@ -8,9 +8,6 @@ const app = require('../server.js');
 chai.use(chaiHttp);
 const should = chai.should();
 
-
-
-
 function deepThought(val){
   if (val === 42) {
     return 'The Answer';
@@ -18,9 +15,6 @@ function deepThought(val){
     throw Error('Boom');
   }
 }
-
-
-
 
 describe('Items API', function () {
 

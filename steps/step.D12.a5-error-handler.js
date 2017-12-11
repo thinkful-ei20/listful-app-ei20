@@ -2,6 +2,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 
@@ -23,15 +24,9 @@ const demoAuth = function (req, res, next) {
   }
 };
 
-function demoCORS(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  next();
-}
-
 app.use(demoLogger);
-app.use(demoCORS);
+
+app.use(cors());
 
 app.get('/api/items', (req, res) => {
   res.send('Show a list of items');
@@ -39,6 +34,22 @@ app.get('/api/items', (req, res) => {
 
 app.post('/api/items', demoAuth, (req, res) => {
   res.send(`Create a specific item ${req.body.name}`);
+});
+
+app.get('/throw', (req, res) => {
+  throw new Error('Boom!!');
+});
+
+
+//* Catch-all endpoint if client makes request to non-existent endpoint
+app.use('*', function (req, res) {
+  res.status(404).json({ code: 404, message: 'Not Found' });
+});
+
+//* Catch-all endpoint for errors (see dummy "/throw" endpoint above)
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(

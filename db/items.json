@@ -1,0 +1,9 @@
+[
+  { "name": "Apples", "checked": false },
+  { "name": "Bananas", "checked": true },
+  { "name": "Cheries", "checked": false },
+  { "name": "Dates", "checked": true },
+  { "name": "Elderberries", "checked": false },
+  { "name": "Figs", "checked": true },
+  { "name": "Grapes", "checked": false }
+]

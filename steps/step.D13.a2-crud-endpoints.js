@@ -19,7 +19,7 @@ app.use(bodyParser.json()); // parse JSON body
 // ===== ITEMS =====
 const items = require('./db/storage')('items');
 
-app.get('/api/items  ', (req, res) => {
+app.get('/api/items', (req, res) => {
   console.log('Return a list of items');
   const query = req.query;
   const list = items.getList(query);
@@ -63,14 +63,4 @@ app.use(function (err, req, res, next) {
 // ===== APP LISTEN =====
 app.listen(process.env.PORT || 8080, () => console.log(
   `Your app is listening on port ${process.env.PORT || 8080}`));
-
-// ===== SEED DATABASE =====  
-// Seed the dummy database
-items.addOne({ name: 'Apples' });
-items.addOne({ name: 'Bananas' });
-items.addOne({ name: 'Cheries' });
-items.addOne({ name: 'Dates' });
-items.addOne({ name: 'Elderberry' });
-items.addOne({ name: 'Fig' });
-items.addOne({ name: 'Grape' });
 

@@ -2,7 +2,6 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 
 const app = express();
 
@@ -24,9 +23,30 @@ const demoAuth = function (req, res, next) {
   }
 };
 
-app.use(demoLogger);
+const redirects = {
+  '/items': '/api/items',
+  '/old-url-1': '/new-url-1',
+  '/old-url-2': '/new-url-2',
+  '/old-url-3': '/new-url-1',
+  '/old-url-4': '/new-url-2'
+};
 
-app.use(cors());
+/* Note:
+ - `req.path` is the path without the querystring
+ - `req.url` is the url including the querystring
+ */
+function demoRedirect(map) {
+  return function demoRedirects(req, res, next) {
+    if (map[req.path]) {
+      res.redirect(301, map[req.url]);
+    } else {
+      next();
+    }
+  };
+}
+
+app.use(demoLogger);
+app.use(demoRedirect(redirects));
 
 app.get('/api/items', (req, res) => {
   res.send('Show a list of items');
@@ -34,15 +54,6 @@ app.get('/api/items', (req, res) => {
 
 app.post('/api/items', demoAuth, (req, res) => {
   res.send(`Create a specific item ${req.body.name}`);
-});
-
-app.get('/throw', (req, res) => {
-  throw new Error('Boom!!');
-});
-
-app.use(function (err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(
