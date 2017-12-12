@@ -13,9 +13,11 @@ class Render {
   }
 
   generateItemElement(item) {
+    //<span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
     return `
     <li class="js-item-id-element" data-item-id="${item.id}">
-      <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
+      <input name="shopping-item" value="${item.name}" ${item.checked ? 'disabled' : ''}
+        class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}"></input>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">check</span>

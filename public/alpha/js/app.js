@@ -23,6 +23,14 @@ class Store {
     }
   }
 
+  findByIdAndUpdate(id, update) {
+    let item = this.findById(Number(id));
+    if (item) {
+      Object.assign(item, update);
+    }
+    return item;
+  }
+
 }
 
 const api = new Api('/items');
@@ -56,6 +64,7 @@ $(function () {
   });
 
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
+    event.preventDefault();
     const id = $(event.currentTarget).closest('.js-item-id-element').attr('data-item-id');
     const item = store.findById(id);
 
@@ -69,6 +78,7 @@ $(function () {
   });
 
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
+    event.preventDefault();
     const id = $(event.currentTarget).closest('.js-item-id-element').attr('data-item-id');
 
     api.remove(id)
@@ -78,6 +88,21 @@ $(function () {
       }).catch(err => {
         console.error(err);
       });
+  });
+
+  $('.js-shopping-list').on('change', '.js-shopping-item', event => {
+    event.preventDefault();
+    const id = $(event.currentTarget).closest('.js-item-id-element').attr('data-item-id');
+    const itemUpdate = { name: $(event.currentTarget).val() };
+
+    api.update(id, itemUpdate)
+      .then(() => {
+        store.findByIdAndUpdate(id, itemUpdate);
+        render.shoppingList();
+      }).catch(err => {
+        console.error(err);
+      });
+
   });
 
 });
