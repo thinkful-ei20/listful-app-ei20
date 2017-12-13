@@ -4,10 +4,10 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const util = require('util');
 
-const data = require('./db/items');
-const storage = require('./db/fakedb');
-const items = storage(data);
+const {PORT} = require('./config');
+const itemsRouter = require('./routers/itemsRouter');
 
 const app = express();
 
@@ -20,57 +20,44 @@ app.use(express.static('public')); // serve static files
 app.use(cors());
 app.use(bodyParser.json()); // parse JSON body
 
-// ===== ITEMS =====
+// ===== ITEMS ROUTES =====
 
-app.get('/items', (req, res) => {
-  console.log('Return a list of items');
-  const query = req.query;
-  const list = items.find(query);
-  res.json(list);
-});
-
-app.get('/items/:id', (req, res) => {
-  console.log(`Return a single item ${req.params.id}`);
-  const id = req.params.id;
-  res.json(items.findById(id));
-});
-
-app.post('/items', (req, res) => {
-  console.log(`Create an item: ${req.body}`);
-  const item = req.body;
-  const newItem = items.create(item);
-  res.location(`/items/${newItem.id}`).status(201).json(newItem);
-});
-
-app.put('/items/:id', (req, res) =>{
-  console.log(`Replace an item: ${req.params.id}`);
-  const id = req.params.id;
-  const item = req.body;
-  res.json(items.findByIdAndReplace(id, item));
-});
-
-app.patch('/items/:id', (req, res) =>{
-  console.log(`Update an item: ${req.params.id}`);
-  const id = req.params.id;
-  const item = req.body;
-  res.json(items.findByIdAndUpdate(id, item));
-});
-
-app.delete('/items/:id', (req, res) => {
-  console.log(`Delete a single item: ${req.params.id}`);
-  const id = req.params.id;
-  items.findByIdAndRemove(id);
-  return res.sendStatus(204);
-});
+app.use('/v1/items', itemsRouter);
 
 // ===== ERROR HANDLERS =====
 
-app.use(function (err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+// 404 catch-all
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-// ===== APP LISTEN =====
-app.listen(process.env.PORT || 8080, () => console.log(
-  `Your app is listening on port ${process.env.PORT || 8080}`));
+// Error handler
+// Only show stacktrace if 'env' is 'development'
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: (process.env.NODE_ENV === 'development') ? err : {}
+  });
+});
 
+app.listenAsync = function (port) {
+  return new Promise((resolve, reject) => {
+    this.listen(port, function () {
+      this.closeAsync = util.promisify(this.close);
+      resolve(this);
+    }).on('error', reject);
+  });
+};
+
+// ===== APP LISTEN =====
+if (require.main === module) {
+  app.listenAsync(PORT)
+    .then(server => {
+      console.info(`Server listening on port ${server.address().port}`);
+    })
+    .catch(console.error);
+}
+module.exports = app; // Export for testing

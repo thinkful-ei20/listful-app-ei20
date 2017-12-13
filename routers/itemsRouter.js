@@ -1,54 +1,55 @@
 'use strict';
 
 const express = require('express');
-const demoAuth = require('../middleware/demoAuth');
 const router = express.Router();
 
+const data = require('../db/items');
+const fakeDB = require('../db/fakedb');
+const items = fakeDB(data);
+
 // ===== ITEMS ======
-const items = require('../db/storage')('items');
 
-router.get('/', (req, res) => {
-  // console.log('Show a list of items');
+router.get('/', (req, res, next) => {
   const query = req.query;
-  const list = items.getList(query);
-  res.json(list); 
+  const list = items.find(query);
+  res.json(list);
 });
 
-router.get('/:id', (req, res) => {
-  // console.log(`Return a single item ${req.params.id}`);
+router.get('/:id', (req, res, next) => {
   const id = req.params.id;
-  res.json(items.getOne(id));
+  const item = items.findById(id);
+  if (!item) {next();}
+  res.json(item);
 });
 
-router.post('/', (req, res) => {
-  // console.log(`Create an item: ${req.body}`);
+router.post('/', (req, res, next) => {
   const item = req.body;
-  const newItem = items.addOne(item);
-  res.location(`/api/items/${newItem.id}`).status(201).json(newItem);
+  if (!req.body.name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+  const newItem = items.create(item);
+  res.location(`/items/${newItem.id}`).status(201).json(newItem);
 });
 
 router.put('/:id', (req, res) =>{
-  // console.log(`Update an item: ${req.params.id}`);
   const id = req.params.id;
   const item = req.body;
-  res.json(items.modOne(id, item));
+  res.json(items.findByIdAndUpdate(id, item));  // PUT as update
+  // res.json(items.findByIdAndReplace(id, item)); // PUT as replace
+});
+
+router.patch('/:id', (req, res) =>{
+  const id = req.params.id;
+  const item = req.body;
+  res.json(items.findByIdAndUpdate(id, item));
 });
 
 router.delete('/:id', (req, res) => {
-  // console.log(`Delete a single item: ${req.params.id}`);
   const id = req.params.id;
-  items.delOne(id);
+  items.findByIdAndRemove(id);
   return res.sendStatus(204);
 });
 
 module.exports = router;
-
-// ===== SEED DATABASE =====
-// Seed the dummy database
-items.addOne({ name: 'Apples' });
-items.addOne({ name: 'Bananas' });
-items.addOne({ name: 'Cheries' });
-items.addOne({ name: 'Dates' });
-items.addOne({ name: 'Elderberry' });
-items.addOne({ name: 'Fig' });
-items.addOne({ name: 'Grape' });

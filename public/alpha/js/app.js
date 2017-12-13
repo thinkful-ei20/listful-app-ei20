@@ -33,7 +33,7 @@ class Store {
 
 }
 
-const api = new Api('/items');
+const api = new Api('/v1/items');
 const store = new Store();
 const render = new Render(store, api);
 

@@ -3,7 +3,10 @@
   { "name": "Bananas", "checked": true },
   { "name": "Cheries", "checked": false },
   { "name": "Dates", "checked": true },
-  { "name": "Elderberries", "checked": false },
-  { "name": "Figs", "checked": true },
-  { "name": "Grapes", "checked": false }
+  { "name": "Eggplant", "checked": false },
+  { "name": "Flour", "checked": true },
+  { "name": "Grapes", "checked": false },
+  { "name": "Honey", "checked": false },
+  { "name": "IceCream", "checked": false },
+  { "name": "Jello", "checked": false }
 ]

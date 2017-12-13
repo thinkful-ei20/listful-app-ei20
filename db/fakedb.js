@@ -7,11 +7,7 @@ const Storage = {
     return item;
   },
   find: function (query = {}) {
-    if (query) {
-      return this.data.filter(item => Object.keys(query).every(key => item[key] === query[key]));
-    } else {
-      return this.data;
-    }
+    return this.data.filter(item => Object.keys(query).every(key => item[key] === query[key]));
   },
   findById: function (id) {
     return this.data.find(item => item.id === Number(id));
@@ -28,6 +24,7 @@ const Storage = {
     if (item) {
       item = update;
     }
+    item.id = id;
     return item;
   },
   findByIdAndRemove: function (id) {
