@@ -1,7 +1,6 @@
 {
-	"name": "demo-middleware-cors-modules",
+	"name": "listful-app",
 	"version": "0.0.1",
-	"description": "demo-middleware-cors-modules",
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js",
@@ -14,13 +13,8 @@
 		"chai-spies": "^0.7.1",
 		"cors": "^2.8.4",
 		"express": "^4.12.4",
-		"json-server": "^0.12.1",
 		"mocha": "^3.5.3",
 		"morgan": "^1.9.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/NodeDemos/demo-middleware-cors-modules"
 	},
 	"license": "MIT"
 }

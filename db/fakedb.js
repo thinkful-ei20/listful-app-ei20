@@ -1,17 +1,21 @@
 'use strict';
 
 const Storage = {
+
   create: function (item) {
     item.id = this.nextVal++;
     this.data.push(item);
     return item;
   },
+
   find: function (query = {}) {
     return this.data.filter(item => Object.keys(query).every(key => item[key] === query[key]));
   },
+
   findById: function (id) {
     return this.data.find(item => item.id === Number(id));
   },
+
   findByIdAndUpdate: function (id, update) {
     let item = this.findById(Number(id));
     if (item) {
@@ -19,6 +23,7 @@ const Storage = {
     }
     return item;
   },
+
   findByIdAndReplace: function (id, update) {
     let item = this.findById(Number(id));
     if (item) {
@@ -27,6 +32,7 @@ const Storage = {
     item.id = id;
     return item;
   },
+
   findByIdAndRemove: function (id) {
     const index = this.data.findIndex(item => item.id === Number(id));
     if (index !== -1) {
@@ -35,9 +41,11 @@ const Storage = {
       return 0;
     }
   }
+
 };
 
 module.exports = function (data) {
+
   const storage = Object.create(Storage);
   storage.nextVal = 1000;
   storage.data = data.map(item => {
@@ -54,4 +62,5 @@ module.exports = function (data) {
   };
 
   return storage;
+  
 };

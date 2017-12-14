@@ -1,12 +1,12 @@
 [
-  { "name": "Apples", "checked": false },
-  { "name": "Bananas", "checked": true },
-  { "name": "Cheries", "checked": false },
-  { "name": "Dates", "checked": true },
+  { "name": "Apples",   "checked": false },
+  { "name": "Bananas",  "checked": true },
+  { "name": "Cheries",  "checked": false },
+  { "name": "Dates",    "checked": true },
   { "name": "Eggplant", "checked": false },
-  { "name": "Flour", "checked": true },
-  { "name": "Grapes", "checked": false },
-  { "name": "Honey", "checked": false },
+  { "name": "Flour",    "checked": true },
+  { "name": "Grapes",   "checked": false },
+  { "name": "Honey",    "checked": true },
   { "name": "IceCream", "checked": false },
-  { "name": "Jello", "checked": false }
+  { "name": "Jello",    "checked": true }
 ]

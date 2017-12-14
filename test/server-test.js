@@ -17,6 +17,7 @@ chai.use(chaiHttp);
 chai.use(chaiSpies);
 
 describe('sanity check and setup', function () {
+
   it('true should be true', function () {
     expect(true).to.be.true;
   });
@@ -44,6 +45,7 @@ describe('Listful App ', function () {
   });
 
   describe('Express Static', function () {
+
     it('GET request "/" should return the index page', function () {
       return chai.request(server)
         .get('/')
@@ -53,9 +55,11 @@ describe('Listful App ', function () {
           expect(res).to.be.html;
         });
     });
+
   });
 
   describe('404 Error Handler', function () {
+
     it('should respond with 404 when given a bad path', function () {
       const spy = chai.spy();
       return chai.request(server)
@@ -68,6 +72,7 @@ describe('Listful App ', function () {
           expect(spy).to.not.have.been.called();
         });
     });
+
   });
 
   describe('GET /v1/items', function () {
@@ -160,12 +165,10 @@ describe('Listful App ', function () {
   describe('POST /v1/items', function () {
 
     it('should create and return a new item when provided valid data', function () {
-
       const newItem = {
         'name': 'Zucchini',
         'checked': false
       };
-
       return chai.request(app)
         .post('/v1/items')
         .send(newItem)
@@ -182,11 +185,9 @@ describe('Listful App ', function () {
     });
 
     it('should return an error when missing "name" field', function () {
-
       const newItem = {
         'checked': false
       };
-
       const spy = chai.spy();
       return chai.request(app)
         .post('/v1/items')
@@ -209,12 +210,10 @@ describe('Listful App ', function () {
   describe('PUT /v1/items/:id', function () {
 
     it('should update item with requested fields', function () {
-
       const updatedItem = {
         'name': 'Raisins',
         'checked': false
       };
-
       return chai.request(app)
         .put('/v1/items/1005')
         .send(updatedItem)
@@ -235,7 +234,6 @@ describe('Listful App ', function () {
         'name': 'Raisins',
         'checked': false
       };
-
       const spy = chai.spy();
       return chai.request(server)
         .put('/v1/items/9999')

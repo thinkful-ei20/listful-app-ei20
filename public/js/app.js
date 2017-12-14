@@ -2,12 +2,12 @@
 'use strict';
 
 class Store {
-  // Setting all the store properties to null is not strictly necessary but
-  // it does provide a nice way of documenting the fields
+  // Setting all the store properties to null is not strictly necessary
+  //  but it does provide a nice way of documenting the fields
   constructor() {
-    this.data = null;     // search result - array of objects (documents) 
-    this.view = null;     // current view: list | details | create | edit 
-    this.query = null;    // search query values
+    this.data = null;
+    this.view = null;
+    this.query = null;
   }
 
   findById(id) {
@@ -43,9 +43,8 @@ $(function () {
     .then(response => {
       store.data = response;
       render.shoppingList();
-    }).catch(err => {
-      console.error(err);
-    });
+    })
+    .catch(console.error);
 
   $('#js-shopping-list-form').submit(function (event) {
     event.preventDefault();
@@ -58,9 +57,8 @@ $(function () {
         newItemInput.val('');
         store.data.unshift(response);
         render.shoppingList();
-      }).catch(err => {
-        console.error(err);
-      });
+      })
+      .catch(console.error);
   });
 
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
@@ -72,9 +70,8 @@ $(function () {
       .then(response => {
         item.checked = response.checked;
         render.shoppingList();
-      }).catch(err => {
-        console.error(err);
-      });
+      })
+      .catch(console.error);
   });
 
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
@@ -85,9 +82,8 @@ $(function () {
       .then(() => {
         store.findByIdAndRemove(id);
         render.shoppingList();
-      }).catch(err => {
-        console.error(err);
-      });
+      })
+      .catch(console.error);
   });
 
   $('.js-shopping-list').on('change', '.js-shopping-item', event => {
@@ -99,9 +95,8 @@ $(function () {
       .then(() => {
         store.findByIdAndUpdate(id, itemUpdate);
         render.shoppingList();
-      }).catch(err => {
-        console.error(err);
-      });
+      })
+      .catch(console.error);
 
   });
 

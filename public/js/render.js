@@ -2,6 +2,7 @@
 'use strict';
 
 class Render {
+  
   constructor(store, api) {
     this.store = store;
     this.api = api;

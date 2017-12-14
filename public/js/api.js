@@ -1,12 +1,12 @@
 'use strict';
 
 class Api {
+
   constructor(path, baseUrl = window.location.origin) {
-    console.log('path', path)
-    console.log('baseUrl', baseUrl)
     this.baseUrl = baseUrl;
     this.path = path;
   }
+
   _buildUrl(path, query = {}) {
     var url = new URL(path, this.baseUrl);
 
@@ -15,16 +15,15 @@ class Api {
 
     return url;
   }
+
   _normalizeResponseErrors(res) {
     if (!res.ok) {
       if (
         res.headers.has('content-type') &&
         res.headers.get('content-type').startsWith('application/json')
       ) {
-        // It's a nice JSON error returned by us, so decode it
         return res.json().then(err => Promise.reject(err));
       }
-      // It's a less informative error returned by express
       return Promise.reject({
         status: res.status,
         message: res.statusText
@@ -32,6 +31,7 @@ class Api {
     }
     return res;
   }
+
   create(document) {
     const url = this._buildUrl(this.path);
 
@@ -45,6 +45,7 @@ class Api {
     }).then(this._normalizeResponseErrors)
       .then(res => res.json());
   }
+
   search(query) {
     const url = this._buildUrl(this.path, query);
 
@@ -56,6 +57,7 @@ class Api {
     }).then(this._normalizeResponseErrors)
       .then(res => res.json());
   }  
+
   details(id) {
     const url = this._buildUrl(`${this.path}/${id}`);
 
@@ -67,6 +69,7 @@ class Api {
     }).then(this._normalizeResponseErrors)
       .then(res => res.json());
   }
+
   replace(id, obj) {
     const url = this._buildUrl(`${this.path}/${id}`);
 
@@ -80,6 +83,7 @@ class Api {
     }).then(this._normalizeResponseErrors)
       .then(res => res.json());
   }
+
   update(id, obj) {
     const url = this._buildUrl(`${this.path}/${id}`);
 
@@ -93,6 +97,7 @@ class Api {
     }).then(this._normalizeResponseErrors)
       .then(res => res.json());
   }
+
   remove(id) {
     const url = this._buildUrl(`${this.path}/${id}`);
 
@@ -104,4 +109,5 @@ class Api {
     }).then(this._normalizeResponseErrors)
       .then(res => res.text());
   }
+  
 }
