@@ -23,23 +23,59 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const item = req.body;
-  if (!req.body.name) {
+  const { name, checked } = req.body;
+  if (!name) {
     const err = new Error('Missing `name` in request body');
     err.status = 400;
     return next(err);
   }
-  const newItem = items.create(item);
-  res.location(`/items/${newItem.id}`).status(201).json(newItem);
+  const item = items.create({ name, checked });
+  res.location(`/items/${item.id}`).status(201).json(item);
 });
 
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-  const item = req.body;
-  const updatedItem = items.findByIdAndUpdate(id, item);  // PUT as update
-  // const updatedItem = items.findByIdAndReplace(id, item); // PUT as replace
-  if (!updatedItem) { return next(); }
-  res.json(updatedItem);
+
+  const toUpdate = {};
+  const updateableFields = ['name', 'checked'];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  if (!toUpdate.name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+  const item = items.findByIdAndReplace(id, toUpdate); // replace
+  if (!item) { return next(); }
+  res.json(item);
+});
+
+router.patch('/:id', (req, res, next) => {
+  const id = req.params.id;
+
+  const toUpdate = {};
+  const updateableFields = ['name', 'checked'];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  if (!toUpdate.name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  const item = items.findByIdAndUpdate(id, toUpdate); // update
+  if (!item) { return next(); }
+  res.json(item);
 });
 
 router.delete('/:id', (req, res, next) => {

@@ -16,20 +16,23 @@ const Storage = {
     return this.data.find(item => item.id === Number(id));
   },
 
+  findByIdAndReplace: function (id, update) {
+    id = Number(id);
+    
+    const index = this.data.findIndex(item => item.id === Number(id));
+    if (index !== -1) {
+      update.id = id;
+      this.data.splice(index, 1, update);
+      return update;
+    }   
+  },
+
   findByIdAndUpdate: function (id, update) {
-    let item = this.findById(Number(id));
+    id = Number(id);
+    let item = this.findById(id);
     if (item) {
       Object.assign(item, update);
     }
-    return item;
-  },
-
-  findByIdAndReplace: function (id, update) {
-    let item = this.findById(Number(id));
-    if (item) {
-      item = update;
-    }
-    item.id = id;
     return item;
   },
 

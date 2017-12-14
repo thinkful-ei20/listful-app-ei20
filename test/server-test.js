@@ -209,35 +209,42 @@ describe('Listful App ', function () {
 
   describe('PUT /v1/items/:id', function () {
 
-    it('should update item with requested fields', function () {
-      const updatedItem = {
-        'name': 'Raisins',
-        'checked': false
+    it('should replace entire item', function () {
+      const item = {
+        'name': 'Raisins'
       };
       return chai.request(app)
         .put('/v1/items/1005')
-        .send(updatedItem)
+        .send(item)
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.include.keys('id', 'name', 'checked');
+          expect(res.body).to.include.keys('id', 'name');
+          expect(res.body).to.not.include.keys('checked');
           expect(res.body.id).to.equal(1005);
-          expect(res.body.name).to.equal(updatedItem.name);
-          expect(res.body.checked).to.equal(updatedItem.checked);
-
+          expect(res.body.name).to.equal(item.name);
         });
     });
 
+
+    it('should return correct items', function () {
+      return chai.request(app)
+        .get('/v1/items/1005')
+        .then(function (res) {
+          expect(res).to.have.status(200);
+          console.log('should be Raisins', res.body)
+        });
+    });    
+
     it('should respond with a 404 for an invalid id', function () {
-      const updatedItem = {
-        'name': 'Raisins',
-        'checked': false
+      const item = {
+        'name': 'Raisins'
       };
       const spy = chai.spy();
       return chai.request(server)
         .put('/v1/items/9999')
-        .send('updatedItem', updatedItem)
+        .send(item)
         .then(spy)
         .catch(err => {
           expect(err.response).to.have.status(404);
@@ -248,6 +255,45 @@ describe('Listful App ', function () {
     });
 
   });
+
+  describe('PATCH /v1/items/:id', function () {
+
+    it('should update item with requested fields', function () {
+      const item = {
+        'name': 'Raisins'
+      };
+      return chai.request(app)
+        .patch('/v1/items/1005')
+        .send(item)
+        .then(function (res) {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.include.keys('id', 'name', 'checked');
+          expect(res.body.id).to.equal(1005);
+          expect(res.body.name).to.equal(item.name);
+        });
+    });
+
+    it('should respond with a 404 for an invalid id', function () {
+      const item = {
+        'name': 'Raisins'
+      };
+      const spy = chai.spy();
+      return chai.request(server)
+        .patch('/v1/items/9999')
+        .send(item)
+        .then(spy)
+        .catch(err => {
+          expect(err.response).to.have.status(404);
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        });
+    });
+
+  });
+
 
   describe('DELETE  /v1/items/:id', function () {
 
