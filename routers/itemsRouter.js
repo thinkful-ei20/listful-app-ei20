@@ -9,7 +9,7 @@ const items = fakeDB(data);
 
 // ===== ITEMS ======
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   const query = req.query;
   const list = items.find(query);
   res.json(list);
@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   const item = items.findById(id);
-  if (!item) {next();}
+  if (!item) { return next(); }
   res.json(item);
 });
 
@@ -33,23 +33,20 @@ router.post('/', (req, res, next) => {
   res.location(`/items/${newItem.id}`).status(201).json(newItem);
 });
 
-router.put('/:id', (req, res) =>{
+router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const item = req.body;
-  res.json(items.findByIdAndUpdate(id, item));  // PUT as update
-  // res.json(items.findByIdAndReplace(id, item)); // PUT as replace
+  const updatedItem = items.findByIdAndUpdate(id, item);  // PUT as update
+  // const updatedItem = items.findByIdAndReplace(id, item); // PUT as replace
+  if (!updatedItem) { return next(); }
+  res.json(updatedItem);
 });
 
-router.patch('/:id', (req, res) =>{
+router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  const item = req.body;
-  res.json(items.findByIdAndUpdate(id, item));
-});
-
-router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  items.findByIdAndRemove(id);
-  return res.sendStatus(204);
+  const result = items.findByIdAndRemove(id);
+  if (!result) { return next(); }
+  res.sendStatus(204);
 });
 
 module.exports = router;

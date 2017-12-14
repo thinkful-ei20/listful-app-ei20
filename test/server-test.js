@@ -54,6 +54,7 @@ describe('Listful App ', function () {
         });
     });
   });
+
   describe('404 Error Handler', function () {
     it('should respond with 404 when given a bad path', function () {
       const spy = chai.spy();
@@ -90,7 +91,6 @@ describe('Listful App ', function () {
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
           expect(res.body).to.have.length(10);
-
           res.body.forEach(function (item) {
             expect(item).to.be.a('object');
             expect(item).to.include.keys('id', 'name', 'checked');
@@ -135,9 +135,7 @@ describe('Listful App ', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('object');
-
           expect(res.body).to.include.keys('id', 'name', 'checked');
-
           expect(res.body.id).to.equal(1000);
           expect(res.body.name).to.equal('Apples');
           expect(res.body.checked).to.be.false;
@@ -175,14 +173,11 @@ describe('Listful App ', function () {
           expect(res).to.have.status(201);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-
           expect(res.body).to.include.keys('id', 'name', 'checked');
-
           expect(res.body.id).to.equal(1010);
           expect(res.body.name).to.equal(newItem.name);
           expect(res.body.checked).to.equal(newItem.checked);
           expect(res).to.have.header('location');
-
         });
     });
 
@@ -227,13 +222,30 @@ describe('Listful App ', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-
           expect(res.body).to.include.keys('id', 'name', 'checked');
-
           expect(res.body.id).to.equal(1005);
           expect(res.body.name).to.equal(updatedItem.name);
           expect(res.body.checked).to.equal(updatedItem.checked);
 
+        });
+    });
+
+    it('should respond with a 404 for an invalid id', function () {
+      const updatedItem = {
+        'name': 'Raisins',
+        'checked': false
+      };
+
+      const spy = chai.spy();
+      return chai.request(server)
+        .put('/v1/items/9999')
+        .send('updatedItem', updatedItem)
+        .then(spy)
+        .catch(err => {
+          expect(err.response).to.have.status(404);
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
         });
     });
 
@@ -242,16 +254,26 @@ describe('Listful App ', function () {
   describe('DELETE  /v1/items/:id', function () {
 
     it('should delete an item by id', function () {
-
       return chai.request(app)
         .delete('/v1/items/1005')
         .then(function (res) {
           expect(res).to.have.status(204);
+        });
+    });
 
+    it('should respond with a 404 for an invalid id', function () {
+      const spy = chai.spy();
+      return chai.request(app)
+        .delete('/v1/items/9999')
+        .then(spy)
+        .catch(err => {
+          expect(err.response).to.have.status(404);
+        })
+        .then(() => {
+          expect(spy).to.not.have.been.called();
         });
     });
 
   });
-
 
 });
