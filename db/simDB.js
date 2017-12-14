@@ -1,6 +1,8 @@
 'use strict';
 
-const Storage = {
+// Simple In-Memory Database
+
+const simDB = {
 
   create: function (item) {
     item.id = this.nextVal++;
@@ -61,6 +63,4 @@ const Storage = {
   }
 };
 
-const storage = Object.create(Storage);
-
-module.exports = storage;
+module.exports = Object.create(simDB);

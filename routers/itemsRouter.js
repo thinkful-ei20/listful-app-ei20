@@ -4,8 +4,8 @@ const express = require('express');
 const router = express.Router();
 
 const data = require('../db/items');
-const fakeDB = require('../db/fakedb');
-const items = fakeDB.initialize(data);
+const simDB = require('../db/simDB');
+const items = simDB.initialize(data);
 
 // ===== ITEMS ======
 
@@ -66,12 +66,6 @@ router.patch('/:id', (req, res, next) => {
       toUpdate[field] = req.body[field];
     }
   });
-
-  if (!toUpdate.name) {
-    const err = new Error('Missing `name` in request body');
-    err.status = 400;
-    return next(err);
-  }
 
   const item = items.findByIdAndUpdate(id, toUpdate); // update
   if (!item) { return next(); }

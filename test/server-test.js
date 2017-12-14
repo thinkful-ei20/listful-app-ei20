@@ -12,8 +12,7 @@ const chaiHttp = require('chai-http');
 const chaiSpies = require('chai-spies');
 
 const data = require('../db/items');
-const fakeDB = require('../db/fakedb');
-
+const simDB = require('../db/simDB');
 
 const expect = chai.expect;
 
@@ -45,11 +44,11 @@ describe('Listful App ', function () {
   });
 
   beforeEach(function () {
-    fakeDB.initialize(data);
+    simDB.initialize(data);
   });
 
   afterEach(function () {
-    fakeDB.destroy();
+    simDB.destroy();
   });
 
   after(function () {
@@ -262,18 +261,19 @@ describe('Listful App ', function () {
 
     it('should update item with requested fields', function () {
       const item = {
-        'name': 'Raisins'
+        checked: true
       };
       return chai.request(app)
-        .patch('/v1/items/1005')
+        .patch('/v1/items/1004')
         .send(item)
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body).to.include.keys('id', 'name', 'checked');
-          expect(res.body.id).to.equal(1005);
-          expect(res.body.name).to.equal(item.name);
+          expect(res.body.id).to.equal(1004);
+          expect(res.body.name).to.equal('Eggplant');
+          expect(res.body.checked).to.equal(true);
         });
     });
 
