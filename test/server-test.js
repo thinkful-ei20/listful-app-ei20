@@ -11,6 +11,10 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const chaiSpies = require('chai-spies');
 
+const data = require('../db/items');
+const fakeDB = require('../db/fakedb');
+
+
 const expect = chai.expect;
 
 chai.use(chaiHttp);
@@ -38,6 +42,14 @@ describe('Listful App ', function () {
   before(function () {
     return app.listenAsync()
       .then(instance => server = instance);
+  });
+
+  beforeEach(function () {
+    fakeDB.initialize(data);
+  });
+
+  afterEach(function () {
+    fakeDB.destroy();
   });
 
   after(function () {
@@ -226,16 +238,6 @@ describe('Listful App ', function () {
           expect(res.body.name).to.equal(item.name);
         });
     });
-
-
-    it('should return correct items', function () {
-      return chai.request(app)
-        .get('/v1/items/1005')
-        .then(function (res) {
-          expect(res).to.have.status(200);
-          console.log('should be Raisins', res.body)
-        });
-    });    
 
     it('should respond with a 404 for an invalid id', function () {
       const item = {

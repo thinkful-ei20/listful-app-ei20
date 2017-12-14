@@ -43,27 +43,24 @@ const Storage = {
     } else {
       return 0;
     }
-  }
+  },
 
-};
-
-module.exports = function (data) {
-
-  const storage = Object.create(Storage);
-  storage.nextVal = 1000;
-  storage.data = data.map(item => {
-    item.id = storage.nextVal++;
-    return item;
-  });
-
-  storage.restore = function () {
-    storage.nextVal = 1000;
-    storage.data = data.map(item => {
-      item.id = storage.nextVal++;
+  initialize: function(data) {
+    this.nextVal = 1000;
+    this.data = data.map(item => {
+      item.id = this.nextVal++;
       return item;
     });
-  };
+    return this;
+  },
 
-  return storage;
-  
+  destroy: function() {    
+    this.nextVal = 1000;
+    this.data = [];
+    return this;
+  }
 };
+
+const storage = Object.create(Storage);
+
+module.exports = storage;

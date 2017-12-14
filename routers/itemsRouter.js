@@ -5,7 +5,7 @@ const router = express.Router();
 
 const data = require('../db/items');
 const fakeDB = require('../db/fakedb');
-const items = fakeDB(data);
+const items = fakeDB.initialize(data);
 
 // ===== ITEMS ======
 
@@ -30,7 +30,7 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
   const item = items.create({ name, checked });
-  res.location(`/items/${item.id}`).status(201).json(item);
+  res.location(`http://${req.headers.host}/items/${item.id}`).status(201).json(item);
 });
 
 router.put('/:id', (req, res, next) => {
