@@ -44,7 +44,7 @@ describe('Listful App ', function () {
     return server.closeAsync();
   });
 
-  describe('Express Static', function () {
+  describe('Express static', function () {
 
     it('GET request "/" should return the index page', function () {
       return chai.request(server)
@@ -58,7 +58,7 @@ describe('Listful App ', function () {
 
   });
 
-  describe('404 Error Handler', function () {
+  describe('Error handler', function () {
 
     it('should respond with 404 when given a bad path', function () {
       const spy = chai.spy();
