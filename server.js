@@ -16,7 +16,6 @@ app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common', {
 }));
 
 app.use(express.static('public')); // serve static files
-
 app.use(cors());
 app.use(bodyParser.json()); // parse JSON body
 
@@ -49,6 +48,12 @@ app.listenAsync = function (port) {
   });
 };
 
+/** NOTE:
+ * if (require.main === module) ...
+ * Block only executes if `server.js` is executed using `npm start` or `node server.js`
+ * Block does not execute when required like `require('./server');`
+ * Prevents error: "Trying to open unclosed connection." when running mocha tests
+ */
 if (require.main === module) {
   app.listenAsync(PORT)
     .then(server => {

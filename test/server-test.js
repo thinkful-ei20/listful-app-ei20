@@ -37,18 +37,19 @@ describe('sanity check and setup', function () {
 
 describe('Listful App ', function () {
 
-  let server;
+  let server; // define server at higher scope so it is available to chai.request()
+
   before(function () {
     return app.listenAsync()
-      .then(instance => server = instance);
+      .then(instance => server = instance); // set server instance
   });
 
   beforeEach(function () {
-    simDB.initialize(data);
+    return simDB.initialize(data);
   });
 
   afterEach(function () {
-    simDB.destroy();
+    return simDB.destroy();
   });
 
   after(function () {
