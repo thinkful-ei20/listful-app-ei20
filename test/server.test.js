@@ -35,21 +35,13 @@ describe('sanity check and setup', function () {
 
 });
 
-describe('Listful App ', function () {
+describe('Basic Express setup', function () {
 
   let server; // define server at higher scope so it is available to chai.request()
 
   before(function () {
     return app.listenAsync()
       .then(instance => server = instance); // set server instance
-  });
-
-  beforeEach(function () {
-    return simDB.initialize(data);
-  });
-
-  afterEach(function () {
-    return simDB.destroy();
   });
 
   after(function () {
@@ -70,27 +62,49 @@ describe('Listful App ', function () {
 
   });
 
-  describe('Error handler', function () {
+  describe('404 handler', function () {
 
     it('should respond with 404 when given a bad path', function () {
       const spy = chai.spy();
       return chai.request(server)
         .get('/bad/path')
         .then(spy)
-        .catch(err => {
-          expect(err.response).to.have.status(404);
-        })
         .then(() => {
           expect(spy).to.not.have.been.called();
+        })
+        .catch(err => {
+          expect(err.response).to.have.status(404);
         });
     });
 
+  });
+});
+
+describe('Items routes', function () {
+
+  let server; // define server at higher scope so it is available to chai.request()
+
+  before(function () {
+    return app.listenAsync()
+      .then(instance => server = instance); // set server instance
+  });
+
+  beforeEach(function () {
+    return simDB.initializeAsync(data);
+  });
+
+  afterEach(function () {
+    return simDB.destroyAsync();
+  });
+
+  after(function () {
+    return server.closeAsync();
   });
 
   describe('GET /v1/items', function () {
 
     it('should return the default of 10 items ', function () {
-      return chai.request(app)
+      return chai.request(server)
         .get('/v1/items')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -101,7 +115,7 @@ describe('Listful App ', function () {
     });
 
     it('should return a list with the correct right fields', function () {
-      return chai.request(app)
+      return chai.request(server)
         .get('/v1/items')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -116,7 +130,7 @@ describe('Listful App ', function () {
     });
 
     it('should return correct search results for a valid query', function () {
-      return chai.request(app)
+      return chai.request(server)
         .get('/v1/items?name=Apples')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -131,7 +145,7 @@ describe('Listful App ', function () {
     });
 
     it('should return an empty array for an incorrect query', function () {
-      return chai.request(app)
+      return chai.request(server)
         .get('/v1/items?name=FooBars')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -146,7 +160,7 @@ describe('Listful App ', function () {
   describe('GET /v1/items/:id', function () {
 
     it('should return correct items', function () {
-      return chai.request(app)
+      return chai.request(server)
         .get('/v1/items/1000')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -164,11 +178,11 @@ describe('Listful App ', function () {
       return chai.request(server)
         .get('/v1/items/9999')
         .then(spy)
-        .catch(err => {
-          expect(err.response).to.have.status(404);
-        })
         .then(() => {
           expect(spy).to.not.have.been.called();
+        })
+        .catch(err => {
+          expect(err.response).to.have.status(404);
         });
     });
 
@@ -181,7 +195,7 @@ describe('Listful App ', function () {
         'name': 'Zucchini',
         'checked': false
       };
-      return chai.request(app)
+      return chai.request(server)
         .post('/v1/items')
         .send(newItem)
         .then(function (res) {
@@ -201,19 +215,19 @@ describe('Listful App ', function () {
         'checked': false
       };
       const spy = chai.spy();
-      return chai.request(app)
+      return chai.request(server)
         .post('/v1/items')
         .send(newItem)
         .then(spy)
+        .then(() => {
+          expect(spy).to.not.have.been.called();
+        })
         .catch((err) => {
           const res = err.response;
           expect(res).to.have.status(400);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body.message).to.equal('Missing `name` in request body');
-        })
-        .then(() => {
-          expect(spy).to.not.have.been.called();
         });
     });
 
@@ -225,7 +239,7 @@ describe('Listful App ', function () {
       const item = {
         'name': 'Raisins'
       };
-      return chai.request(app)
+      return chai.request(server)
         .put('/v1/items/1005')
         .send(item)
         .then(function (res) {
@@ -248,11 +262,11 @@ describe('Listful App ', function () {
         .put('/v1/items/9999')
         .send(item)
         .then(spy)
-        .catch(err => {
-          expect(err.response).to.have.status(404);
-        })
         .then(() => {
           expect(spy).to.not.have.been.called();
+        })
+        .catch(err => {
+          expect(err.response).to.have.status(404);
         });
     });
 
@@ -264,7 +278,7 @@ describe('Listful App ', function () {
       const item = {
         checked: true
       };
-      return chai.request(app)
+      return chai.request(server)
         .patch('/v1/items/1004')
         .send(item)
         .then(function (res) {
@@ -287,21 +301,20 @@ describe('Listful App ', function () {
         .patch('/v1/items/9999')
         .send(item)
         .then(spy)
-        .catch(err => {
-          expect(err.response).to.have.status(404);
-        })
         .then(() => {
           expect(spy).to.not.have.been.called();
+        })
+        .catch(err => {
+          expect(err.response).to.have.status(404);
         });
     });
 
   });
 
-
   describe('DELETE  /v1/items/:id', function () {
 
     it('should delete an item by id', function () {
-      return chai.request(app)
+      return chai.request(server)
         .delete('/v1/items/1005')
         .then(function (res) {
           expect(res).to.have.status(204);
@@ -310,14 +323,14 @@ describe('Listful App ', function () {
 
     it('should respond with a 404 for an invalid id', function () {
       const spy = chai.spy();
-      return chai.request(app)
+      return chai.request(server)
         .delete('/v1/items/9999')
         .then(spy)
-        .catch(err => {
-          expect(err.response).to.have.status(404);
-        })
         .then(() => {
           expect(spy).to.not.have.been.called();
+        })
+        .catch(err => {
+          expect(err.response).to.have.status(404);
         });
     });
 
