@@ -11,47 +11,52 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const chaiSpies = require('chai-spies');
 
-const data = require('../db/items');
-const simDB = require('../db/simDB');
-
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 chai.use(chaiSpies);
 
-describe('sanity check and setup', function () {
+describe('Reality Check', function () {
 
   it('true should be true', function () {
     expect(true).to.be.true;
   });
 
-  it('1 + 1 should equal 2', function () {
-    expect(1 + 1).to.equal(2);
+  it('2 + 2 should equal 4', function () {
+    expect(2 + 2).to.equal(4);
   });
+
+});
+
+describe('System setup', function () {
 
   it('NODE_ENV should be "test"', function () {
     expect(process.env.NODE_ENV).to.equal('test');
+  });
+
+  it('Express App should have correct methods', function () {
+    expect(app).to.have.property('listen');
   });
 
 });
 
 describe('Basic Express setup', function () {
 
-  let server; // define server at higher scope so it is available to chai.request()
+  // let server; // define server at higher scope so it is available to chai.request()
 
-  before(function () {
-    return app.listenAsync()
-      .then(instance => server = instance); // set server instance
-  });
+  // before(function () {
+  //   return app.listenAsync()
+  //     .then(instance => server = instance); // set server instance
+  // });
 
-  after(function () {
-    return server.closeAsync();
-  });
+  // after(function () {
+  //   return server.closeAsync();
+  // });
 
   describe('Express static', function () {
 
     it('GET request "/" should return the index page', function () {
-      return chai.request(server)
+      return chai.request(app)
         .get('/')
         .then(function (res) {
           expect(res).to.exist;
@@ -66,7 +71,7 @@ describe('Basic Express setup', function () {
 
     it('should respond with 404 when given a bad path', function () {
       const spy = chai.spy();
-      return chai.request(server)
+      return chai.request(app)
         .get('/bad/path')
         .then(spy)
         .then(() => {
@@ -82,29 +87,21 @@ describe('Basic Express setup', function () {
 
 describe('Items routes', function () {
 
-  let server; // define server at higher scope so it is available to chai.request()
+  let server = app; // define server at higher scope so it is available to chai.request()
 
-  before(function () {
-    return app.listenAsync()
-      .then(instance => server = instance); // set server instance
-  });
+  // before(function () {
+  //   return app.listenAsync()
+  //     .then(instance => server = instance); // set server instance
+  // });
 
-  beforeEach(function () {
-    return simDB.initializeAsync(data);
-  });
-
-  afterEach(function () {
-    return simDB.destroyAsync();
-  });
-
-  after(function () {
-    return server.closeAsync();
-  });
+  // after(function () {
+  //   return server.closeAsync();
+  // });
 
   describe('GET /v1/items', function () {
 
     it('should return the default of 10 items ', function () {
-      return chai.request(server)
+      return chai.request(app)
         .get('/v1/items')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -115,7 +112,7 @@ describe('Items routes', function () {
     });
 
     it('should return a list with the correct right fields', function () {
-      return chai.request(server)
+      return chai.request(app)
         .get('/v1/items')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -130,7 +127,7 @@ describe('Items routes', function () {
     });
 
     it('should return correct search results for a valid query', function () {
-      return chai.request(server)
+      return chai.request(app)
         .get('/v1/items?name=Apples')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -145,7 +142,7 @@ describe('Items routes', function () {
     });
 
     it('should return an empty array for an incorrect query', function () {
-      return chai.request(server)
+      return chai.request(app)
         .get('/v1/items?name=FooBars')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -160,7 +157,7 @@ describe('Items routes', function () {
   describe('GET /v1/items/:id', function () {
 
     it('should return correct items', function () {
-      return chai.request(server)
+      return chai.request(app)
         .get('/v1/items/1000')
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -175,7 +172,7 @@ describe('Items routes', function () {
 
     it('should respond with a 404 for an invalid id', function () {
       const spy = chai.spy();
-      return chai.request(server)
+      return chai.request(app)
         .get('/v1/items/9999')
         .then(spy)
         .then(() => {
@@ -195,7 +192,7 @@ describe('Items routes', function () {
         'name': 'Zucchini',
         'checked': false
       };
-      return chai.request(server)
+      return chai.request(app)
         .post('/v1/items')
         .send(newItem)
         .then(function (res) {
@@ -215,7 +212,7 @@ describe('Items routes', function () {
         'checked': false
       };
       const spy = chai.spy();
-      return chai.request(server)
+      return chai.request(app)
         .post('/v1/items')
         .send(newItem)
         .then(spy)
@@ -239,7 +236,7 @@ describe('Items routes', function () {
       const item = {
         'name': 'Raisins'
       };
-      return chai.request(server)
+      return chai.request(app)
         .put('/v1/items/1005')
         .send(item)
         .then(function (res) {
@@ -258,7 +255,7 @@ describe('Items routes', function () {
         'name': 'Raisins'
       };
       const spy = chai.spy();
-      return chai.request(server)
+      return chai.request(app)
         .put('/v1/items/9999')
         .send(item)
         .then(spy)
@@ -278,7 +275,7 @@ describe('Items routes', function () {
       const item = {
         checked: true
       };
-      return chai.request(server)
+      return chai.request(app)
         .patch('/v1/items/1004')
         .send(item)
         .then(function (res) {
@@ -297,7 +294,7 @@ describe('Items routes', function () {
         'name': 'Raisins'
       };
       const spy = chai.spy();
-      return chai.request(server)
+      return chai.request(app)
         .patch('/v1/items/9999')
         .send(item)
         .then(spy)
@@ -314,7 +311,7 @@ describe('Items routes', function () {
   describe('DELETE  /v1/items/:id', function () {
 
     it('should delete an item by id', function () {
-      return chai.request(server)
+      return chai.request(app)
         .delete('/v1/items/1005')
         .then(function (res) {
           expect(res).to.have.status(204);
@@ -323,7 +320,7 @@ describe('Items routes', function () {
 
     it('should respond with a 404 for an invalid id', function () {
       const spy = chai.spy();
-      return chai.request(server)
+      return chai.request(app)
         .delete('/v1/items/9999')
         .then(spy)
         .then(() => {
