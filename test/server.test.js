@@ -9,12 +9,10 @@
 const app = require('../server');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const chaiSpies = require('chai-spies');
 
 const expect = chai.expect;
 
 chai.use(chaiHttp);
-chai.use(chaiSpies);
 
 describe('Reality Check', function () {
 
@@ -56,8 +54,7 @@ describe('Basic Express setup', function () {
   describe('Express static', function () {
 
     it('GET request "/" should return the index page', function () {
-      return chai.request(app)
-        .get('/')
+      return chai.request(app).get('/')
         .then(function (res) {
           expect(res).to.exist;
           expect(res).to.have.status(200);
@@ -70,15 +67,11 @@ describe('Basic Express setup', function () {
   describe('404 handler', function () {
 
     it('should respond with 404 when given a bad path', function () {
-      const spy = chai.spy();
       return chai.request(app)
         .get('/bad/path')
-        .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
-        .catch(err => {
-          expect(err.response).to.have.status(404);
+        .catch(err => err.response)
+        .then(res => {
+          expect(res).to.have.status(404);
         });
     });
 
@@ -171,15 +164,11 @@ describe('Items routes', function () {
     });
 
     it('should respond with a 404 for an invalid id', function () {
-      const spy = chai.spy();
       return chai.request(app)
         .get('/v1/items/9999')
-        .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
-        .catch(err => {
-          expect(err.response).to.have.status(404);
+        .catch(err => err.response)
+        .then(res => {
+          expect(res).to.have.status(404);
         });
     });
 
@@ -211,16 +200,11 @@ describe('Items routes', function () {
       const newItem = {
         'checked': false
       };
-      const spy = chai.spy();
       return chai.request(app)
         .post('/v1/items')
         .send(newItem)
-        .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
-        .catch((err) => {
-          const res = err.response;
+        .catch(err => err.response)
+        .then(res => {
           expect(res).to.have.status(400);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
@@ -254,16 +238,12 @@ describe('Items routes', function () {
       const item = {
         'name': 'Raisins'
       };
-      const spy = chai.spy();
       return chai.request(app)
         .put('/v1/items/9999')
         .send(item)
-        .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
-        .catch(err => {
-          expect(err.response).to.have.status(404);
+        .catch(err => err.response)
+        .then(res => {
+          expect(res).to.have.status(404);
         });
     });
 
@@ -293,16 +273,12 @@ describe('Items routes', function () {
       const item = {
         'name': 'Raisins'
       };
-      const spy = chai.spy();
       return chai.request(app)
         .patch('/v1/items/9999')
         .send(item)
-        .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
-        .catch(err => {
-          expect(err.response).to.have.status(404);
+        .catch(err => err.response)
+        .then(res => {
+          expect(res).to.have.status(404);
         });
     });
 
@@ -319,15 +295,11 @@ describe('Items routes', function () {
     });
 
     it('should respond with a 404 for an invalid id', function () {
-      const spy = chai.spy();
       return chai.request(app)
         .delete('/v1/items/9999')
-        .then(spy)
-        .then(() => {
-          expect(spy).to.not.have.been.called();
-        })
-        .catch(err => {
-          expect(err.response).to.have.status(404);
+        .catch(err => err.response)
+        .then(spy => {
+          expect(spy).to.have.status(404);
         });
     });
 
