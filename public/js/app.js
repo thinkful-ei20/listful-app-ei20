@@ -1,7 +1,7 @@
 /* global $ Api Render Store */
 'use strict';
 
-const api = new Api('/v1/items');
+const api = new Api('/api/items');
 const store = new Store();
 const render = new Render(store, api);
 

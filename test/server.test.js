@@ -68,8 +68,7 @@ describe('Basic Express setup', function () {
 
     it('should respond with 404 when given a bad path', function () {
       return chai.request(app)
-        .get('/bad/path')
-        .catch(err => err.response)
+        .get('/DOES/NOT/EXIST')
         .then(res => {
           expect(res).to.have.status(404);
         });
@@ -91,11 +90,11 @@ describe('Items routes', function () {
   //   return server.closeAsync();
   // });
 
-  describe('GET /v1/items', function () {
+  describe('GET /api/items', function () {
 
     it('should return the default of 10 items ', function () {
       return chai.request(app)
-        .get('/v1/items')
+        .get('/api/items')
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -106,7 +105,7 @@ describe('Items routes', function () {
 
     it('should return a list with the correct right fields', function () {
       return chai.request(app)
-        .get('/v1/items')
+        .get('/api/items')
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -121,7 +120,7 @@ describe('Items routes', function () {
 
     it('should return correct search results for a valid query', function () {
       return chai.request(app)
-        .get('/v1/items?name=Apples')
+        .get('/api/items?name=Apples')
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -136,7 +135,7 @@ describe('Items routes', function () {
 
     it('should return an empty array for an incorrect query', function () {
       return chai.request(app)
-        .get('/v1/items?name=FooBars')
+        .get('/api/items?name=FooBars')
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -147,11 +146,11 @@ describe('Items routes', function () {
 
   });
 
-  describe('GET /v1/items/:id', function () {
+  describe('GET /api/items/:id', function () {
 
     it('should return correct items', function () {
       return chai.request(app)
-        .get('/v1/items/1000')
+        .get('/api/items/1000')
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -165,8 +164,7 @@ describe('Items routes', function () {
 
     it('should respond with a 404 for an invalid id', function () {
       return chai.request(app)
-        .get('/v1/items/9999')
-        .catch(err => err.response)
+        .get('/api/items/9999')
         .then(res => {
           expect(res).to.have.status(404);
         });
@@ -174,7 +172,7 @@ describe('Items routes', function () {
 
   });
 
-  describe('POST /v1/items', function () {
+  describe('POST /api/items', function () {
 
     it('should create and return a new item when provided valid data', function () {
       const newItem = {
@@ -182,7 +180,7 @@ describe('Items routes', function () {
         'checked': false
       };
       return chai.request(app)
-        .post('/v1/items')
+        .post('/api/items')
         .send(newItem)
         .then(function (res) {
           expect(res).to.have.status(201);
@@ -201,9 +199,8 @@ describe('Items routes', function () {
         'checked': false
       };
       return chai.request(app)
-        .post('/v1/items')
+        .post('/api/items')
         .send(newItem)
-        .catch(err => err.response)
         .then(res => {
           expect(res).to.have.status(400);
           expect(res).to.be.json;
@@ -214,14 +211,14 @@ describe('Items routes', function () {
 
   });
 
-  describe('PUT /v1/items/:id', function () {
+  describe('PUT /api/items/:id', function () {
 
     it('should replace entire item', function () {
       const item = {
         'name': 'Raisins'
       };
       return chai.request(app)
-        .put('/v1/items/1005')
+        .put('/api/items/1005')
         .send(item)
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -239,9 +236,8 @@ describe('Items routes', function () {
         'name': 'Raisins'
       };
       return chai.request(app)
-        .put('/v1/items/9999')
+        .put('/api/items/9999')
         .send(item)
-        .catch(err => err.response)
         .then(res => {
           expect(res).to.have.status(404);
         });
@@ -249,14 +245,14 @@ describe('Items routes', function () {
 
   });
 
-  describe('PATCH /v1/items/:id', function () {
+  describe('PATCH /api/items/:id', function () {
 
     it('should update item with requested fields', function () {
       const item = {
         checked: true
       };
       return chai.request(app)
-        .patch('/v1/items/1004')
+        .patch('/api/items/1004')
         .send(item)
         .then(function (res) {
           expect(res).to.have.status(200);
@@ -274,9 +270,8 @@ describe('Items routes', function () {
         'name': 'Raisins'
       };
       return chai.request(app)
-        .patch('/v1/items/9999')
+        .patch('/api/items/9999')
         .send(item)
-        .catch(err => err.response)
         .then(res => {
           expect(res).to.have.status(404);
         });
@@ -284,11 +279,11 @@ describe('Items routes', function () {
 
   });
 
-  describe('DELETE  /v1/items/:id', function () {
+  describe('DELETE  /api/items/:id', function () {
 
     it('should delete an item by id', function () {
       return chai.request(app)
-        .delete('/v1/items/1005')
+        .delete('/api/items/1005')
         .then(function (res) {
           expect(res).to.have.status(204);
         });
@@ -296,10 +291,9 @@ describe('Items routes', function () {
 
     it('should respond with a 404 for an invalid id', function () {
       return chai.request(app)
-        .delete('/v1/items/9999')
-        .catch(err => err.response)
-        .then(spy => {
-          expect(spy).to.have.status(404);
+        .delete('/api/items/DOESNOTEXIST')
+        .then(res => {
+          expect(res).to.have.status(404);
         });
     });
 

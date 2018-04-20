@@ -21,7 +21,7 @@ app.use(express.static('public'));
 app.use(express.json());
 
 // Mount router on "/api"
-app.use('/v1', notesRouter);
+app.use('/api', notesRouter);
 
 // Catch-all 404
 app.use(function (req, res, next) {
@@ -45,7 +45,7 @@ if (require.main === module) {
     console.info(`Server listening on ${this.address().port}`);
   }).on('error', err => {
     console.error(err);
-  });  
+  });
 }
 
 module.exports = app; // Export for testing
